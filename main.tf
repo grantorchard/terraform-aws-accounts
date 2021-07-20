@@ -23,7 +23,7 @@ resource "aws_organizations_account" "this" {
 	for_each = toset(var.aws_account_names)
   name  = each.value
   email = "go@hashicorp.com"
-	role_name = "sudo"
+	role_name = "terraform"
 }
 
 resource "vault_aws_secret_backend_role" "terraform" {
