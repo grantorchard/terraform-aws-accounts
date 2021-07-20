@@ -4,7 +4,7 @@ provider "aws" {
 	token = data.vault_aws_access_credentials.this.security_token
 }
 provider "vault" {
-	address = locals.vault_url
+	address = local.vault_url
 	namespace = "admin"
 }
 
@@ -18,6 +18,4 @@ data "vault_aws_access_credentials" "this" {
 	role = "personal"
 	ttl = "15m"
 }
-
-
 
