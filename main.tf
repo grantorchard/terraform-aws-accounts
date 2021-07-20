@@ -9,11 +9,11 @@ provider "vault" {
 }
 
 locals {
-	vault_url = data.terraform_remote_state.terraform-hcp-core.vault_url
+	vault_url = data.terraform_remote_state.terraform-hcp-core.outputs.vault_url
 }
 
 data "vault_aws_access_credentials" "this" {
-	backend = aws
+	backend = "aws"
 	type = "sts"
 	role = "personal"
 	ttl = "15m"
