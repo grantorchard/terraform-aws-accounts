@@ -19,3 +19,10 @@ data "vault_aws_access_credentials" "this" {
 	ttl = "15m"
 }
 
+resource "aws_organizations_account" "this" {
+	for_each = toset(var.aws_account_names)
+  name  = each.value
+  email = "go@hashicorp.com"
+	role_name = "sudo"
+}
+
