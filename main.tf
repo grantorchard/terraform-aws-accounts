@@ -23,12 +23,13 @@ resource "aws_organizations_account" "this" {
 	for_each = toset(var.aws_account_names)
   name  = each.value
   email = "go@hashicorp.com"
-	role_name = "terraform"
+	role_name = "sudo"
 }
 
 resource "vault_aws_secret_backend_role" "terraform" {
 	backend = "aws"
 	credential_type = "assumed_role"
+	max_sts_ttl = "30m"
 	name = "terraform"
 	role_arns = [
 		for account in aws_organizations_account.this: "arn:aws:organizations::${account.id}:role/${account.role_name}"
