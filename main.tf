@@ -28,7 +28,7 @@ resource "aws_organizations_account" "this" {
 
 resource "vault_aws_secret_backend_role" "terraform" {
 	backend = "aws"
-	credential_type = "sts"
+	credential_type = "assumed_role"
 	name = "terraform"
 	role_arns = [
 		for account in aws_organizations_account.this: "arn:aws:organizations::${account.id}:role/${account.role_name}"
