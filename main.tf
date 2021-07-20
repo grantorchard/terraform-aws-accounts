@@ -26,3 +26,10 @@ resource "aws_organizations_account" "this" {
 	role_name = "sudo"
 }
 
+resource "vault_aws_secret_backend_role" "terraform" {
+	backend = "aws"
+	role_arns = [ 
+		for account in aws_organizations_account.this: "arn:aws:organizations::${account.id}:role/${account.role_name}"
+	]
+}
+
