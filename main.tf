@@ -15,7 +15,7 @@ locals {
 data "vault_aws_access_credentials" "this" {
 	backend = "aws"
 	type = "sts"
-	role = "personal"
+	role = "account_management"
 	ttl = "15m"
 }
 
