@@ -21,8 +21,8 @@ data "vault_aws_access_credentials" "this" {
 
 resource "aws_organizations_account" "this" {
 	for_each = { for v in var.aws_account_details: v.account_name => v }
-  name  = each.value
-  email = var.email
+  name  = each.value.account_name
+  email = each.value.email
 }
 
 resource "vault_aws_secret_backend_role" "terraform" {
