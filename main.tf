@@ -25,7 +25,7 @@ resource "aws_iam_group_membership" "this" {
   name = "account_config"
 
   users = [
-    data.aws_iam_user.this.name
+    data.aws_iam_user.this.user_name
   ]
 
   group = aws_iam_group.this.name
