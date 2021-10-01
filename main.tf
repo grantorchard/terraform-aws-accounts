@@ -12,33 +12,33 @@ locals {
 	vault_url = data.terraform_remote_state.terraform-hcp-core.outputs.vault_url
 }
 
-resource "aws_iam_group" "this" {
-  name = "account_config"
-  path = "/users/"
-}
+# resource "aws_iam_group" "this" {
+#   name = "account_config"
+#   path = "/users/"
+# }
 
-data "aws_iam_user" "this" {
-	user_name = "hcp_vault_user"
-}
+# data "aws_iam_user" "this" {
+# 	user_name = "hcp_vault_user"
+# }
 
-resource "aws_iam_group_membership" "this" {
-  name = "account_config"
+# resource "aws_iam_group_membership" "this" {
+#   name = "account_config"
 
-  users = [
-    data.aws_iam_user.this.user_name
-  ]
+#   users = [
+#     data.aws_iam_user.this.user_name
+#   ]
 
-  group = aws_iam_group.this.name
-}
+#   group = aws_iam_group.this.name
+# }
 
-data "aws_iam_policy" "this" {
-  name = "AdministratorAccess"
-}
+# data "aws_iam_policy" "this" {
+#   name = "AdministratorAccess"
+# }
 
-resource "aws_iam_group_policy_attachment" "this" {
-  group      = aws_iam_group.this.name
-  policy_arn = data.aws_iam_policy.this.arn
-}
+# resource "aws_iam_group_policy_attachment" "this" {
+#   group      = aws_iam_group.this.name
+#   policy_arn = data.aws_iam_policy.this.arn
+# }
 
 data "vault_aws_access_credentials" "this" {
 	backend = "aws"
@@ -59,7 +59,7 @@ resource "vault_aws_secret_backend_role" "terraform" {
 	max_sts_ttl = 1800 # number in seconds
 	name = "terraform"
 	role_arns = [
-		for account in aws_organizations_account.this: "arn:aws:organizations::${account.id}:role/OrganizationAccountAccessRole"
+		for account in aws_organizations_account.this: "arn:aws:iam::${account.id}:role/OrganizationAccountAccessRole"
 	]
 }
 
