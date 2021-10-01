@@ -12,6 +12,34 @@ locals {
 	vault_url = data.terraform_remote_state.terraform-hcp-core.outputs.vault_url
 }
 
+resource "aws_iam_group" "this" {
+  name = "account_config"
+  path = "/users/"
+}
+
+data "aws_iam_user" "this" {
+	user_name = "hcp_vault_user"
+}
+
+resource "aws_iam_group_membership" "this" {
+  name = "account_config"
+
+  users = [
+    data.aws_iam_user.this.name
+  ]
+
+  group = aws_iam_group.this.name
+}
+
+data "aws_iam_policy" "this" {
+  name = "AdministratorAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "this" {
+  group      = aws_iam_group.this.name
+  policy_arn = data.aws_iam_policy.this.arn
+}
+
 data "vault_aws_access_credentials" "this" {
 	backend = "aws"
 	type = "sts"
