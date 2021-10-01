@@ -20,10 +20,9 @@ data "vault_aws_access_credentials" "this" {
 }
 
 resource "aws_organizations_account" "this" {
-	for_each = toset(var.aws_account_names)
+	for_each = { for v in var.aws_account_names: v.account_name => v }
   name  = each.value
-  email = "go@hashicorp.com"
-	role_name = "sudo"
+  email = var.email
 }
 
 resource "vault_aws_secret_backend_role" "terraform" {
