@@ -9,36 +9,8 @@ provider "vault" {
 }
 
 locals {
-	vault_url = data.terraform_remote_state.terraform-hcp-core.outputs.vault_url
+	vault_url = "https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200"
 }
-
-# resource "aws_iam_group" "this" {
-#   name = "account_config"
-#   path = "/users/"
-# }
-
-# data "aws_iam_user" "this" {
-# 	user_name = "hcp_vault_user"
-# }
-
-# resource "aws_iam_group_membership" "this" {
-#   name = "account_config"
-
-#   users = [
-#     data.aws_iam_user.this.user_name
-#   ]
-
-#   group = aws_iam_group.this.name
-# }
-
-# data "aws_iam_policy" "this" {
-#   name = "AdministratorAccess"
-# }
-
-# resource "aws_iam_group_policy_attachment" "this" {
-#   group      = aws_iam_group.this.name
-#   policy_arn = data.aws_iam_policy.this.arn
-# }
 
 data "vault_aws_access_credentials" "this" {
 	backend = "aws"
@@ -61,5 +33,23 @@ resource "vault_aws_secret_backend_role" "terraform" {
 	role_arns = [
 		for account in aws_organizations_account.this: "arn:aws:iam::${account.id}:role/OrganizationAccountAccessRole"
 	]
+}
+
+data "github_repository" "this" {
+	name = "terraform-aws-account-configuration"
+}
+
+resource "github_repository_file" "this" {
+	for_each = { for account in aws_organizations_account.this: account.id => account }
+	repository          = data.github_repository.this.name
+	branch              = "main"
+  file                = "${each.value.id}.tf"
+  content             = templatefile("./provider.tf.tmpl", {
+		account_id = each.value.id
+	})
+  commit_message      = "Initial commit for provider configuration"
+  commit_author       = "Grant Orchard"
+  commit_email        = "grant.a.orchard@gmail.com"
+  overwrite_on_create = true
 }
 
