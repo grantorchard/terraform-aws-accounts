@@ -4,3 +4,8 @@ variable "aws_account_details" {
 		email = string
 	}))
 }
+
+variable "github_token" {
+	type = string
+}
+

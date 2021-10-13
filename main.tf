@@ -8,6 +8,10 @@ provider "vault" {
 	namespace = "admin"
 }
 
+provider "github" {
+	token = var.github_token
+}
+
 locals {
 	vault_url = "https://production.vault.11eb56d6-0f95-3a99-a33c-0242ac110007.aws.hashicorp.cloud:8200"
 }
