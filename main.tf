@@ -51,7 +51,7 @@ data "aws_iam_role" "this" {
 
 resource "aws_iam_role_policy_attachment" "this" {
 	policy_arn = aws_iam_policy.terraform.arn
-	role = data.aws_iam_role.name
+	role = data.aws_iam_role.this.name
 }
 
 resource "vault_aws_secret_backend_role" "terraform" {
