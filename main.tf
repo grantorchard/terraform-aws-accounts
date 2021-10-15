@@ -45,13 +45,13 @@ data "aws_iam_policy_document" "this" {
 	}
 }
 
-data "aws_iam_role" "this" {
-	name = "terraform"
+data "aws_iam_user" "this" {
+	user_name = "terraform"
 }
 
-resource "aws_iam_role_policy_attachment" "this" {
+resource "aws_iam_user_policy_attachment" "this" {
 	policy_arn = aws_iam_policy.terraform.arn
-	role = data.aws_iam_role.this.name
+	user = data.aws_iam_user.this.user_name
 }
 
 resource "vault_aws_secret_backend_role" "terraform" {
