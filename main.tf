@@ -30,14 +30,14 @@ resource "aws_organizations_account" "this" {
 }
 
 resource "aws_iam_policy" "terraform" {
-	name = "assume_role_for_account_configuration"
+	name = "account_configuration"
 	policy = jsonencode(templatefile("./policy.json.tmpl", {
 		accounts = [ for account in aws_organizations_account.this: account.id ]
 	}))
 }
 
 data "aws_iam_user" "this" {
-	user_name = "hcp_vault"
+	user_name = "hcp_vault_user"
 }
 
 resource "aws_iam_user_policy_attachment" "this" {
