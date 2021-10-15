@@ -29,6 +29,22 @@ resource "aws_organizations_account" "this" {
   email = each.value.email
 }
 
+resource "aws_iam_policy" "terraform" {
+	name = "assume_role_for_account_configuration"
+	policy = jsonencode(templatefile("./policy.json.tmpl", {
+		accounts = [ for account in aws_organizations_account.this: account.id ]
+	}))
+}
+
+data "aws_iam_user" "this" {
+	user_name = "hcp_vault"
+}
+
+resource "aws_iam_user_policy_attachment" "this" {
+	policy_arn = aws_iam_policy.terraform.arn
+	user = data.aws_iam_user.this.arn
+}
+
 resource "vault_aws_secret_backend_role" "terraform" {
 	backend = "aws"
 	credential_type = "assumed_role"

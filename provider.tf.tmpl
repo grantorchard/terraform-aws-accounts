@@ -1,5 +1,5 @@
 provider "aws" {
-    alias = ${account_id}
+    alias = "${account_id}"
 		access_key = data.vault_aws_access_credentials.${account_id}.access_key
 	  secret_key = data.vault_aws_access_credentials.${account_id}.secret_key
 		token = data.vault_aws_access_credentials.${account_id}.security_token
@@ -8,7 +8,7 @@ provider "aws" {
 data "vault_aws_access_credentials" "${account_id}" {
 	backend = "aws"
 	type = "sts"
-	role = "account_management"
+	role = "terraform"
 	role_arn = "arn:aws:iam::${account_id}:role/OrganizationAccountAccessRole"
 	ttl = "30m"
 }
