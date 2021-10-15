@@ -31,7 +31,7 @@ resource "aws_organizations_account" "this" {
 
 resource "aws_iam_policy" "terraform" {
 	name = "account_configuration"
-	policy = data.aws_iam_user.this
+	policy = data.aws_iam_policy_document.this.json
 }
 
 data "aws_iam_policy_document" "this" {
@@ -39,7 +39,7 @@ data "aws_iam_policy_document" "this" {
 		for_each = toset([ for account in aws_organizations_account.this: account.id ])
 		content {
 			actions = ["sts:AssumeRole"]
-			resources = ["arn:aws:iam::${statement.id}:role/OrganizationAccountAccessRole"]
+			resources = ["arn:aws:iam::${statement.value.id}:role/OrganizationAccountAccessRole"]
 			effect = "Allow"
 		}
 	}
