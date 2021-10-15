@@ -31,9 +31,18 @@ resource "aws_organizations_account" "this" {
 
 resource "aws_iam_policy" "terraform" {
 	name = "account_configuration"
-	policy = jsonencode(templatefile("./policy.json.tmpl", {
-		accounts = [ for account in aws_organizations_account.this: account.id ]
-	}))
+	policy = data.aws_iam_user.this
+}
+
+data "aws_iam_policy_document" "this" {
+	dynamic statement {
+		for_each = toset([ for account in aws_organizations_account.this: account.id ])
+		content {
+			actions = ["sts:AssumeRole"]
+			resources = ["arn:aws:iam::${statement.id}:role/OrganizationAccountAccessRole"]
+			effect = "Allow"
+		}
+	}
 }
 
 data "aws_iam_user" "this" {
