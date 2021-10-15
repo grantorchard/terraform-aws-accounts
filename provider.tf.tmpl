@@ -1,11 +1,11 @@
 provider "aws" {
-    alias = "${account_id}"
+    alias = "aws_${account_id}"
 		access_key = data.vault_aws_access_credentials.${account_id}.access_key
 	  secret_key = data.vault_aws_access_credentials.${account_id}.secret_key
 		token = data.vault_aws_access_credentials.${account_id}.security_token
 }
 
-data "vault_aws_access_credentials" "${account_id}" {
+data "vault_aws_access_credentials" "aws_${account_id}" {
 	backend = "aws"
 	type = "sts"
 	role = "terraform"
