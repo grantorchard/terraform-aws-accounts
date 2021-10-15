@@ -7,6 +7,6 @@
 			"Action": "sts:AssumeRole",
 			"Resource": "arn:aws:iam::${account}:role/OrganizationAccountAccessRole"
 		},
-		${ endfor ~}
+		%{ endfor ~}
 	]
 }
