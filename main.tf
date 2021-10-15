@@ -46,7 +46,7 @@ data "aws_iam_policy_document" "this" {
 }
 
 data "aws_iam_user" "this" {
-	user_name = "terraform"
+	user_name = "terraform_account_baseline"
 }
 
 resource "aws_iam_user_policy_attachment" "this" {
