@@ -46,7 +46,7 @@ data "aws_iam_policy_document" "this" {
 }
 
 data "aws_iam_user" "this" {
-	user_name = "terraform_account_baseline"
+	user_name = "hcp_vault_user"
 }
 
 resource "aws_iam_user_policy_attachment" "this" {
