@@ -3,10 +3,7 @@ provider "aws" {
 	secret_key = data.vault_aws_access_credentials.this.secret_key
 	token = data.vault_aws_access_credentials.this.security_token
 }
-provider "vault" {
-	address = local.vault_url
-	namespace = "admin"
-}
+provider "vault" {}
 
 provider "github" {
 	token = var.github_token
